@@ -6,9 +6,9 @@ Infer a jsonschema from a json file
 ## usage
 
 ```bash
-go install github.com/JackKCWong/go-jsonschema/...@latest
+go install github.com/JackKCWong/go-jsonschemate/...@latest
 
-echo '{"hello": "world"}' | jsonsche
+echo '{"hello": "world"}' | jsonsche [-yaml]
 
 # or just
 
