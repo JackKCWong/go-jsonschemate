@@ -11,17 +11,19 @@ import (
 	"github.com/invopop/jsonschema"
 	"github.com/traefik/yaegi/interp"
 	"github.com/twpayne/go-jsonstruct/v2"
+	"gopkg.in/yaml.v3"
 )
 
 func main() {
 
+	outYaml := flag.Bool("yaml", false, "output schema in yaml, useful for openapi v3")
 	flag.Parse()
 
-	var jsonstr []byte 
+	var jsonstr []byte
 	var err error
 	var in io.Reader
 
-	if flag.NArg() == 1 { 
+	if flag.NArg() == 1 {
 		file, err := os.Open(flag.Arg(0))
 		if err != nil {
 			panic(err)
@@ -67,9 +69,28 @@ func main() {
 
 	schema := jsonschema.ReflectFromType(v.Type())
 
-	out, err := json.MarshalIndent(schema, "", "    ")
-	if err != nil {
-		panic(err)
+	var out []byte
+	if *outYaml {
+		out, err = json.MarshalIndent(schema, "", "    ")
+		if err != nil {
+			panic(err)
+		}
+
+		var tmp = make(map[string]interface{})
+		err = json.Unmarshal(out, &tmp)
+		if err != nil {
+			panic(err)
+		}
+
+		out, err = yaml.Marshal(tmp)
+		if err != nil {
+			panic(err)
+		}
+	} else {
+		out, err = json.MarshalIndent(schema, "", "    ")
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	fmt.Printf("%s\n", string(out))
