@@ -38,3 +38,7 @@ output:
 
 It converts a json to Go struct and then generates a schema from the Go struct.
 
+## caveats
+
+* It marks all properties as required
+* It doesn't do well with "null" values
